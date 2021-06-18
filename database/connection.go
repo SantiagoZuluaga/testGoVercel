@@ -16,7 +16,7 @@ var (
 
 func GetConnection() (*sql.DB, error) {
 	once.Do(func() {
-		db, err = sql.Open("sqlite3", "./database/database.db")
+		db, err = sql.Open("sqlite3", "./database.db")
 		if err != nil {
 			fmt.Println("Error creating database: ", err)
 		}
