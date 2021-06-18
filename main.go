@@ -1,7 +1,6 @@
-package handler
+package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -46,58 +45,10 @@ func getPriceFromGoogle() (float64, error) {
 	return price, nil
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-
-	/*
-		now := time.Now()
-		unixNano := now.UnixNano()
-		umillisec := unixNano / 1000000
-
-		 currency, err := database.GetCurrencyPrice()
-		 if err != nil {
-			 price, err := getPriceFromGoogle()
-			 if err != nil {
-				 fmt.Println(err)
-			 }
-			 newcurrency, err := database.InsertCurrency(price, int(umillisec))
-			 if err != nil {
-				 fmt.Println(err)
-			 }
-			 w.Header().Set("Content-Type", "application/json")
-			 json.NewEncoder(w).Encode(newcurrency)
-			 return
-		 }
-
-		 if currency.Updated > int(umillisec)-43200*1000 {
-			 w.Header().Set("Content-Type", "application/json")
-			 json.NewEncoder(w).Encode(currency)
-			 return
-		 }
-
-
-
-		 if currency.Price != price {
-			 newcurrency, err := database.UpdateCurrency(price, int(umillisec))
-			 if err != nil {
-				 fmt.Println(err)
-			 }
-			 w.Header().Set("Content-Type", "application/json")
-			 json.NewEncoder(w).Encode(newcurrency)
-			 return
-		 }
-	*/
-
+func main() {
 	price, err := getPriceFromGoogle()
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	parm := r.URL.Query()["amount"][0]
-	amount, err := strconv.ParseFloat(parm, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(price * amount)
+	fmt.Println(price)
 }
