@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/SantiagoZuluaga/testGoVercel/database"
 	htmlquery "github.com/antchfx/htmlquery"
 )
 
@@ -49,54 +48,56 @@ func getPriceFromGoogle() (int, error) {
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 
-	now := time.Now()
-	unixNano := now.UnixNano()
-	umillisec := unixNano / 1000000
-
 	/*
-		parm := r.URL.Query()["amount"][0]
-		amount, err := strconv.Atoi(parm)
-		if err != nil {
-			fmt.Println(err)
-		}
+		now := time.Now()
+		unixNano := now.UnixNano()
+		umillisec := unixNano / 1000000
+
+		 currency, err := database.GetCurrencyPrice()
+		 if err != nil {
+			 price, err := getPriceFromGoogle()
+			 if err != nil {
+				 fmt.Println(err)
+			 }
+			 newcurrency, err := database.InsertCurrency(price, int(umillisec))
+			 if err != nil {
+				 fmt.Println(err)
+			 }
+			 w.Header().Set("Content-Type", "application/json")
+			 json.NewEncoder(w).Encode(newcurrency)
+			 return
+		 }
+
+		 if currency.Updated > int(umillisec)-43200*1000 {
+			 w.Header().Set("Content-Type", "application/json")
+			 json.NewEncoder(w).Encode(currency)
+			 return
+		 }
+
+
+
+		 if currency.Price != price {
+			 newcurrency, err := database.UpdateCurrency(price, int(umillisec))
+			 if err != nil {
+				 fmt.Println(err)
+			 }
+			 w.Header().Set("Content-Type", "application/json")
+			 json.NewEncoder(w).Encode(newcurrency)
+			 return
+		 }
 	*/
-
-	currency, err := database.GetCurrencyPrice()
-	if err != nil {
-		price, err := getPriceFromGoogle()
-		if err != nil {
-			fmt.Println(err)
-		}
-		newcurrency, err := database.InsertCurrency(price, int(umillisec))
-		if err != nil {
-			fmt.Println(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(newcurrency)
-		return
-	}
-
-	if currency.Updated > int(umillisec)-43200*1000 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(currency)
-		return
-	}
 
 	price, err := getPriceFromGoogle()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	if currency.Price != price {
-		newcurrency, err := database.UpdateCurrency(price, int(umillisec))
-		if err != nil {
-			fmt.Println(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(newcurrency)
-		return
+	parm := r.URL.Query()["amount"][0]
+	amount, err := strconv.Atoi(parm)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(currency)
+	json.NewEncoder(w).Encode(price * amount)
 }
