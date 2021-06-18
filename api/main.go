@@ -11,10 +11,6 @@ import (
 	htmlquery "github.com/antchfx/htmlquery"
 )
 
-func getHandlerWebSocket() {
-
-}
-
 func getPriceFromGoogle() (string, error) {
 	url := "https://www.google.com/search?q=usd+to+cop&oq=usd+to+cop&aqs=chrome..69i57.1749j0j4&sourceid=chrome&ie=UTF-8"
 	req, _ := http.NewRequest("GET", url, nil)
@@ -47,6 +43,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(price)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(price)
+	json.NewEncoder(w).Encode(r.URL.Path[1:])
 }
